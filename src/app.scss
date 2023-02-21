@@ -1,0 +1,134 @@
+// Define variable defaults
+$body-bg: #121212;
+$body-color: #f5f5f5;
+$gold: #e7d108;
+
+:root {
+    --black-hover: rgba(44, 62, 80, 0.15);
+    --active-btn: rgb(1, 197, 231);
+}
+
+hr {
+    border-top: 1px solid var(--active-btn)!important;
+}
+hr.xs {
+    width: 15%!important;
+}
+hr.sm {
+    width: 40%;
+}
+hr.lg {
+    width: 75%;
+}
+
+.form-control {
+    color: white!important;
+    background-color: #1a1a1a!important;
+    border: 1px solid #3a3a3a!important;
+}
+.custom-select {
+    color: white!important;
+    background-color: #1a1a1a!important;
+    border: 1px solid #3a3a3a!important;
+}
+.multiselect {
+    min-height: 38px!important;
+    height:38px!important;
+    color: white!important;
+}
+.multiselect--active .multiselect__tags {
+    height:73px!important;
+}
+.multiselect__input, .multiselect__single {
+    background: #1a1a1a!important;
+    color: white;
+}
+.multiselect__current, .multiselect__select {
+    max-height: 38px!important;
+}
+.multiselect__tags {
+    min-height: 38px!important;
+    height: 38px;
+    background: #1a1a1a!important;
+    border: 1px solid #3a3a3a!important;
+}
+.multiselect__content-wrapper {
+    background: #1a1a1a!important;
+    border: 1px solid #3a3a3a!important;
+
+}
+.multiselect__option--selected.multiselect__option--highlight {
+    background: #ff6a6a!important;
+}
+.multiselect__option--selected {
+    background: #1a1a1a!important;
+    color: white!important;
+}
+.multiselect__tag {
+    background: #007bff!important;
+    border-radius: 10rem!important;
+}
+.multiselect__tag-icon:after {
+    color: white!important;
+}
+
+.modal-content {
+    background-color: #121212!important;
+}
+.close {
+    color: white!important;
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: var(--active-btn)!important;
+    border-color: #414141 #414141 #121212!important;
+}
+.nav-tabs .nav-link {
+    color: #d8d8d8!important;
+}
+.nav-tabs {
+    border-bottom: 1px solid #414141!important;
+}
+
+.text-xs {
+    font-size: 0.65rem;
+}
+.text-sm {
+    font-size: 0.85rem;
+}
+.text-lg {
+    font-size: 1.5rem;
+}
+.text-xl {
+    font-size: 2rem;
+}
+.text-xxl {
+    font-size: 3rem;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.4)!important;
+}
+
+
+#projectList td {
+    padding:1.25rem!important;
+}
+#projectList th {
+    padding:1.25rem!important;
+}
+
+.card {
+    background-color: rgb(32, 32, 32)!important;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 1rem!important;
+}
+#projectList .b-avatar-group .b-avatar-group-inner {
+    justify-content: center
+}
+
+// Then import Bootstrap and BootstrapVue SCSS files (order is important)
+@import 'node_modules/bootstrap/scss/bootstrap.scss';
+@import 'node_modules/bootstrap-vue/src/index.scss';
+
+@import '../node_modules/@sweetalert2/theme-dark/dark.scss';

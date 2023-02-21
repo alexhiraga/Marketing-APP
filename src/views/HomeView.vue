@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <HelloWorld msg="Dashboard"
+    class="pt-5"/>
   </div>
 </template>
 
@@ -16,3 +16,14 @@ export default {
   }
 }
 </script>
+
+<style>
+    div div.home {
+        background-image: url('../assets/wallpaper-supra.jpg');
+        height: 100vh;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        margin: 0!important;
+    }
+</style>
