@@ -4,7 +4,7 @@
 
             <b-row>
                 <b-col cols="4">
-                    <b-img :src="project.image" width="150px" rounded="circle"></b-img>
+                    <b-img :src="project.image" fluid-grow style="max-width: 150px; aspect-ratio: 1; object-fit: contain;" rounded="circle"></b-img>
                 </b-col>
                 <b-col cols="8" class="text-left">
                     <div class="d-flex align-items-center">

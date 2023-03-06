@@ -1,20 +1,35 @@
 <template>
     <div id="app">
-        <sidebar-menu :menu="$store.state.menu" :collapsed="collapsed" @toggle-collapse="onToggleCollapse">
-            <div v-if="!collapsed" slot="footer" class="m-2">
-                <a href="https://github.com/alexhiraga" target="_blank" class="text-secondary">Feito por Alex Hiraga</a>
+        <sidebar-menu 
+            :menu="$store.state.menu" 
+            :collapsed="collapsed" 
+            @toggle-collapse="onToggleCollapse"
+            v-if="user"
+        >
+            <div slot="footer" class="m-4">
+                <a v-if="!collapsed" @click="logout()" class="vsm--link vsm--link_level-1">
+                    <i class="fas fa-sign-out-alt mr-3"></i>
+                    <span class="vsm--title">Logout</span>                  
+                </a>
             </div>
         </sidebar-menu>
 
-        <div :style="collapsed ? 'width: calc(100% - 72px)' : 'width:calc(100% - 300px)'" class="float-right">
+        <LoadingScreen v-if="validatingToken" />
 
-            <!-- <nav>
-                <router-link to="/">Home</router-link> |
-                <router-link to="/about">About</router-link>
-            </nav> -->
-            
-            <router-view class="m-5"/>
+        <div v-else>
+            <div v-if="user" :style="collapsed ? 'width: calc(100% - 72px)' : 'width:calc(100% - 300px)'" class="float-right">
+
+                <!-- <nav>
+                    <router-link to="/">Home</router-link> |
+                    <router-link to="/about">About</router-link>
+                </nav> -->
+                
+                <router-view class="m-5"/>
+            </div>
+
+            <router-view v-else/>
         </div>
+
     </div>
 </template>
 
@@ -46,22 +61,29 @@ nav {
 
 <script>
 import _debounce from 'lodash/debounce'
+import { mapState } from 'vuex'
+import { userKey } from '@/global'
+import LoadingScreen from '@/components/template/LoadingScreen'
 
 export default {
-    components: {  },
+    components: { LoadingScreen },
     data() {
         return {
             collapsed: false,
+            validatingToken: true
         }
     },
 
     created() {
+        this.validateToken()
         window.addEventListener("resize", this.myEventHandler);
     },
     destroyed() {
         window.removeEventListener("resize", this.myEventHandler);
     },
     
+    computed: mapState(['menu', 'user']),
+
     methods: {
         onToggleCollapse(collapsed) {
             this.collapsed = collapsed
@@ -73,7 +95,39 @@ export default {
             } else {
                 this.collapsed = false
             }
-        }, 500)
+        }, 500),
+
+        logout() {
+            localStorage.removeItem(userKey)
+            this.$store.commit('setUser', null)
+            this.$router.push({ path: '/auth' })
+        },
+
+        async validateToken() {
+            this.validatingToken = true
+
+            const json = localStorage.getItem(userKey)
+            const userData = JSON.parse(json)
+            this.$store.commit('setUser', null)
+
+            if(!userData) {
+                this.validatingToken = false
+                this.$router.push({ path: '/auth'})
+                return
+            }
+
+            try {
+                await this.$http.post(`/validateToken`, userData)
+                this.$store.commit('setUser', userData)
+            } catch(e) {
+                localStorage.removeItem(userKey)
+                this.$router.push({ path: '/auth' })
+                console.error(e)
+            }
+
+
+            this.validatingToken = false
+        }
     }
 }
 </script>

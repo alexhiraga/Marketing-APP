@@ -24,13 +24,13 @@ export default {
             return this.status[statusValue].variant
         },
         getAllStatusNames() {
-            var roles = Object.keys(this.status).map(key => {
+            var status = Object.keys(this.status).map(key => {
                 var options = {}
                 this.$set(options, 'value', key)
                 this.$set(options, 'text', this.status[key].name)
                 return options
             })
-            return roles
+            return status
         }
     }
 }

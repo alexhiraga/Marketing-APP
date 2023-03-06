@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 
 Vue.use(Vuex)
 
@@ -27,11 +28,32 @@ export default new Vuex.Store({
                 icon: 'fas fa-list-ul',
                 child: []
             },
-        ]
+            {
+                href: '/settings/',
+                title: 'General Settings',
+                icon: 'fas fa-user-cog'
+            }
+        ],
+        user: null
     },
     getters: {
     },
     mutations: {
+        setUser(state, user) {
+            state.user = user
+            if (user) {
+                axios.defaults.headers.common['Authorization'] = `bearer ${user.token}`
+            } else {
+                delete axios.defaults.headers.common['Authorization']
+            }
+        },
+        refreshUser(state, user) {
+            if(!user) return
+            state.user.user_name = user.user_name
+            state.user.email = user.email
+            if(!user.permission) return
+            state.user.permission = user.permission
+        }
     },
     actions: {
     },

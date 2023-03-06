@@ -26,6 +26,13 @@ hr.lg {
     background-color: #1a1a1a!important;
     border: 1px solid #3a3a3a!important;
 }
+
+.custom-file-label {
+    color: white!important;
+    background-color: #1a1a1a!important;
+    border: 1px solid #3a3a3a!important;
+    box-shadow: none!important
+}
 .custom-select {
     color: white!important;
     background-color: #1a1a1a!important;
@@ -125,6 +132,19 @@ hr.lg {
 }
 #projectList .b-avatar-group .b-avatar-group-inner {
     justify-content: center
+}
+
+//pagination
+.pagination li button {
+    background-color: black;
+    color: white;
+}
+.pagination li span {
+    background-color: black!important;
+    color: white!important;
+}
+.pagination li.active button {
+    background-color: var(--active-btn)!important;
 }
 
 // Then import Bootstrap and BootstrapVue SCSS files (order is important)

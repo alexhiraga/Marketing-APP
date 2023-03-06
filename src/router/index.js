@@ -15,12 +15,9 @@ const routes = [
     //     redirect: '/'
     // },
     {
-        path: '/about',
-        name: 'about',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+        path: '/settings',
+        name: 'GeneralSettings',
+        component: () => import('../views/settings/GeneralSettings.vue')
     },
     {
         path: '/project',
@@ -56,6 +53,11 @@ const routes = [
         name: 'PostsFeed',
         props: true,
         component: () => import('../components/project/project-components/posts/post-view/PostsFeed.vue')
+    },
+    {
+        path: '/auth',
+        name: 'auth',
+        component: () => import('../components/auth/Auth.vue')
     }
 ]
 

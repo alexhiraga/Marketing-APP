@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-img :src="project.image" rounded="circle" width="300px" height="300px" style="object-fit: contain; border: 2px solid var(--active-btn)"></b-img>
+        <b-img :src="project.image" rounded="circle" fluid-grow style="max-width: 300px; aspect-ratio: 1; object-fit: contain; border: 2px solid var(--active-btn)"></b-img>
         <h3 class="mt-4">{{ project.name }} </h3>
         <b-badge class="mb-3" :variant="getStatusColor( project.status)">{{ getStatusName(project.status) }}</b-badge>
         <br>

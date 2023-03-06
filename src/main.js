@@ -16,10 +16,9 @@ import status from './store/status'
 import UnderConstruction from './components/UnderConstruction.vue'
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/src/sweetalert2.js'
-
+import { baseApiUrl } from './global.js'
 import './plugins/axios'
-
-// import globalSidebar from './components/project/project-components/utils.js'
+import './config/msgs'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
@@ -34,6 +33,7 @@ Vue.mixin(roles)
 Vue.mixin(status)
 Vue.component('under-construction', UnderConstruction)
 Vue.use(VueSweetalert2)
+Vue.use(baseApiUrl)
 
 new Vue({
   router,

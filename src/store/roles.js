@@ -21,6 +21,15 @@ export default {
         },
         getRoleColor(roleValue) {
             return this.role[roleValue].variant
+        },
+        getAllRolesNames() {
+            var roles = Object.keys(this.role).map(key => {
+                var options = {}
+                this.$set(options, 'value', key)
+                this.$set(options, 'text', this.role[key].name)
+                return options
+            })
+            return roles
         }
     }
 }

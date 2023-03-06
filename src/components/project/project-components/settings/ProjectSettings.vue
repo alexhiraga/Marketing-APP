@@ -108,10 +108,10 @@
                                     </div>
                                     <div class="w-50">
                                         <b-form-input
-                                        v-if="showUsers"
-                                        v-model="userFilter"
-                                        type="search"
-                                        placeholder="Type to search users"
+                                            v-if="showUsers"
+                                            v-model="userFilter"
+                                            type="search"
+                                            placeholder="Type to search users"
                                         ></b-form-input>
                                     </div>
                                 </div>
@@ -282,11 +282,10 @@ export default {
 
         save() {
             //no back-end
-            // eslint-disable-next-line
             this.$swal({
                 title: 'Error',
                 icon: 'error',
-                text: 'Feature not avaible.'
+                text: 'Feature not available.'
             })
         }
         

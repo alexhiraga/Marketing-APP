@@ -1,7 +1,6 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Dashboard"
-    class="pt-5"/>
+    <HelloWorld msg="Dashboard" />
   </div>
 </template>
 
@@ -19,11 +18,15 @@ export default {
 
 <style>
     div div.home {
-        background-image: url('../assets/wallpaper-supra.jpg');
+        background-image: url('../assets/wallpaper-auth-screen.jpg');
         height: 100vh;
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
         margin: 0!important;
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>

@@ -7,7 +7,8 @@ export default [
         "createdAt": "2022-02-06T12:09:41",
         "createdBy": null,
         "updatedAt": null,
-        "updatedBy": null
+        "updatedBy": null,
+        "email": "hiraga_alex@hotmail.com"
     },
     { 
         "user_name": "Fujiwara Takumi",
@@ -17,7 +18,8 @@ export default [
         "createdAt": "2022-02-06T12:09:41",
         "createdBy": null,
         "updatedAt": null,
-        "updatedBy": null
+        "updatedBy": null,
+        "email": "fujiwara_takumi@tofushop.co.jp"
     },
     { 
         "user_name": "Keiichi Tsuchiya",
@@ -27,7 +29,8 @@ export default [
         "createdAt": "2022-02-06T12:09:41",
         "createdBy": null,
         "updatedAt": null,
-        "updatedBy": null
+        "updatedBy": null,
+        "email": "keiichi_tsuchiya@gmail.com"
     },
     { 
         "user_name": "Daigo Saito",
@@ -37,7 +40,8 @@ export default [
         "createdAt": "2022-02-06T12:09:41",
         "createdBy": null,
         "updatedAt": null,
-        "updatedBy": null
+        "updatedBy": null,
+        "email": "saito_daigo@gmail.com"
     },
     { 
         "user_name": "Drift King",
@@ -47,7 +51,8 @@ export default [
         "createdAt": "2022-02-09T11:46:16",
         "createdBy": null,
         "updatedAt": null,
-        "updatedBy": null
+        "updatedBy": null,
+        "email": "dorikin@gmail.com"
     },
     { 
         "user_name": "Naruto Uzumaki",
@@ -57,7 +62,8 @@ export default [
         "createdAt": "2022-02-09T15:41:16",
         "createdBy": null,
         "updatedAt": null,
-        "updatedBy": null
+        "updatedBy": null,
+        "email": "uzumaki_naruto@konoha.co.jp"
     },
     { 
         "user_name": "Levi Ackerman",
@@ -67,7 +73,8 @@ export default [
         "createdAt": "2022-02-09T15:43:16",
         "createdBy": null,
         "updatedAt": null,
-        "updatedBy": null
+        "updatedBy": null,
+        "email": "levi@sasageyo.com"
     },
     { 
         "user_name": "Itachi Uchiha",
@@ -77,7 +84,8 @@ export default [
         "createdAt": "2022-02-09T15:46:16",
         "createdBy": null,
         "updatedAt": null,
-        "updatedBy": null
+        "updatedBy": null,
+        "email": "itachi@uchiha.co.jp"
     }
     
 ]
