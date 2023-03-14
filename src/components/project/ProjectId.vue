@@ -64,9 +64,15 @@ export default {
         }
     },
 
-    mounted() {
+    async mounted() {
         //from utils, get the project info from id and users and populate project/members
-        this.getProjectData(this.id)
+        await this.getProjectData(this.id)
+        
+        //Transform tags in array
+        this.stringToArray()
+
+        //just a data mock 
+        this.mockGaData()
 
         //from utils, add the project to sidebar
         this.toggleProjectToSideBar('add', 'Projects')
@@ -78,7 +84,110 @@ export default {
     },
 
     methods: {
-        
+        mockGaData() {
+            let gadata = {
+                "totalRevenue": [
+                    { "date": "08-12-2022", "value": 309 },
+                    { "date": "09-12-2022", "value": 87 },
+                    { "date": "10-12-2022", "value": 323 },
+                    { "date": "11-12-2022", "value": 213 },
+                    { "date": "12-12-2022", "value": 420 },
+                    { "date": "13-12-2022", "value": 109 },
+                    { "date": "14-12-2022", "value": 49 },
+                    { "date": "15-12-2022", "value": 33 },
+                    { "date": "16-12-2022", "value": 121 },
+                    { "date": "17-12-2022", "value": 422 },
+                    { "date": "18-12-2022", "value": 96 },
+                    { "date": "19-12-2022", "value": 323 },
+                    { "date": "20-12-2022", "value": 18 },
+                    { "date": "21-12-2022", "value": 49 },
+                    { "date": "22-12-2022", "value": 32 },
+                    { "date": "23-12-2022", "value": 73 },
+                    { "date": "24-12-2022", "value": 22 },
+                    { "date": "25-12-2022", "value": 42 },
+                    { "date": "26-12-2022", "value": 45 },
+                    { "date": "27-12-2022", "value": 67 },
+                    { "date": "28-12-2022", "value": 24 },
+                    { "date": "29-12-2022", "value": 321 },
+                    { "date": "30-12-2022", "value": 115 },
+                    { "date": "31-12-2022", "value": 65 },
+                    { "date": "01-01-2023", "value": 23 },
+                    { "date": "02-01-2023", "value": 75 },
+                    { "date": "03-01-2023", "value": 22 },
+                    { "date": "04-01-2023", "value": 31 },
+                    { "date": "05-01-2023", "value": 97 },
+                    { "date": "06-01-2023", "value": 23 }
+                ],
+                "conversion": [
+                    { "date": "08-12-2022", "value": 6 },
+                    { "date": "09-12-2022", "value": 4 },
+                    { "date": "10-12-2022", "value": 7 },
+                    { "date": "11-12-2022", "value": 3 },
+                    { "date": "12-12-2022", "value": 10 },
+                    { "date": "13-12-2022", "value": 2 },
+                    { "date": "14-12-2022", "value": 4 },
+                    { "date": "15-12-2022", "value": 2 },
+                    { "date": "16-12-2022", "value": 5 },
+                    { "date": "17-12-2022", "value": 11 },
+                    { "date": "18-12-2022", "value": 6 },
+                    { "date": "19-12-2022", "value": 8 },
+                    { "date": "20-12-2022", "value": 1 },
+                    { "date": "21-12-2022", "value": 4 },
+                    { "date": "22-12-2022", "value": 2 },
+                    { "date": "23-12-2022", "value": 3 },
+                    { "date": "24-12-2022", "value": 1 },
+                    { "date": "25-12-2022", "value": 2 },
+                    { "date": "26-12-2022", "value": 2 },
+                    { "date": "27-12-2022", "value": 3 },
+                    { "date": "28-12-2022", "value": 1 },
+                    { "date": "29-12-2022", "value": 10 },
+                    { "date": "30-12-2022", "value": 5 },
+                    { "date": "31-12-2022", "value": 5 },
+                    { "date": "01-01-2023", "value": 3 },
+                    { "date": "02-01-2023", "value": 5 },
+                    { "date": "03-01-2023", "value": 2 },
+                    { "date": "04-01-2023", "value": 1 },
+                    { "date": "05-01-2023", "value": 4 },
+                    { "date": "06-01-2023", "value": 2 }    
+                ],
+                "users": [
+                    { "date": "08-12-2022", "value": 3090 },
+                    { "date": "09-12-2022", "value": 873 },
+                    { "date": "10-12-2022", "value": 3231 },
+                    { "date": "11-12-2022", "value": 2133 },
+                    { "date": "12-12-2022", "value": 4320 },
+                    { "date": "13-12-2022", "value": 1909 },
+                    { "date": "14-12-2022", "value": 498 },
+                    { "date": "15-12-2022", "value": 335 },
+                    { "date": "16-12-2022", "value": 1241 },
+                    { "date": "17-12-2022", "value": 4252 },
+                    { "date": "18-12-2022", "value": 963 },
+                    { "date": "19-12-2022", "value": 3223 },
+                    { "date": "20-12-2022", "value": 198 },
+                    { "date": "21-12-2022", "value": 439 },
+                    { "date": "22-12-2022", "value": 362 },
+                    { "date": "23-12-2022", "value": 773 },
+                    { "date": "24-12-2022", "value": 252 },
+                    { "date": "25-12-2022", "value": 429 },
+                    { "date": "26-12-2022", "value": 457 },
+                    { "date": "27-12-2022", "value": 671 },
+                    { "date": "28-12-2022", "value": 244 },
+                    { "date": "29-12-2022", "value": 3213 },
+                    { "date": "30-12-2022", "value": 1152 },
+                    { "date": "31-12-2022", "value": 653 },
+                    { "date": "01-01-2023", "value": 238 },
+                    { "date": "02-01-2023", "value": 754 },
+                    { "date": "03-01-2023", "value": 225 },
+                    { "date": "04-01-2023", "value": 316 },
+                    { "date": "05-01-2023", "value": 977 },
+                    { "date": "06-01-2023", "value": 33 }
+                ],
+                "goalMonthlyRevenue": 4000,
+                "goalMonthlyConversion": 100,
+                "goalMonthlyUsers": 20000
+            }
+            this.$set(this.project, 'gaData', gadata)
+        }
     },
 }
 </script>

@@ -49,7 +49,7 @@ export default new Vuex.Store({
         },
         refreshUser(state, user) {
             if(!user) return
-            state.user.user_name = user.user_name
+            state.user.name = user.name
             state.user.email = user.email
             if(!user.permission) return
             state.user.permission = user.permission

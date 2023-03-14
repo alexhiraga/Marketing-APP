@@ -13,7 +13,17 @@
                 
                 <!-- <b-tab title="Users list" lazy v-if="user.permission < 4"> -->
                 <b-tab title="Users list" lazy>
-                    <UsersList :user_info="user"/>
+                    <ItemsList 
+                        type="users"
+                        :user_info="user"
+                    />
+                </b-tab>
+
+                <!-- <b-tab title="Project list" lazy v-if="user.permission < 4"> -->
+                <b-tab title="Project list" lazy>
+                    <ItemsList 
+                        type="projects"
+                    />
                 </b-tab>
             </b-tabs>
             
@@ -26,20 +36,20 @@
 <script>
 import ProfileUser from '@/components/settings/ProfileUser.vue'
 import UserSettings from '@/components/settings/UserSettings.vue'
-import UsersList from '@/components/settings/UsersList.vue'
+import ItemsList from '@/components/settings/ItemsList.vue'
 import { mapState } from 'vuex'
 
 export default {
     name: 'GeneralSettings',
-    components: { ProfileUser, UserSettings, UsersList },
+    components: { ProfileUser, UserSettings, ItemsList },
     computed: mapState(['user']),
 
     data() {
         return {
             // user: {
-            //     user_name: 'Alex Hiraga',
+            //     name: 'Alex Hiraga',
             //     user_id: 1,
-            //     user_photo: "https://scontent.fmgf7-1.fna.fbcdn.net/v/t31.18172-8/18953546_1057645851003182_5328420222623091627_o.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=3CZaVTvhrfAAX9J5E1H&_nc_ht=scontent.fmgf7-1.fna&oh=00_AfCfrkHv2Tq1YvXJFfcIvPIvol4qsaYaEYNVU4PfASBk7g&oe=640889B1",
+            //     image: "https://scontent.fmgf7-1.fna.fbcdn.net/v/t31.18172-8/18953546_1057645851003182_5328420222623091627_o.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=3CZaVTvhrfAAX9J5E1H&_nc_ht=scontent.fmgf7-1.fna&oh=00_AfCfrkHv2Tq1YvXJFfcIvPIvol4qsaYaEYNVU4PfASBk7g&oe=640889B1",
             //     permission: 1
             // }
         }

@@ -3,7 +3,7 @@
         <b-form class="text-left">
             <b-form-group label="Name:">
                 <b-form-input
-                    v-model="user.user_name"
+                    v-model="user.name"
                     required
                 ></b-form-input>
             </b-form-group>
@@ -58,7 +58,7 @@ export default {
         async save() {
             //no back-end
             let user = {
-                user_name: this.user.user_name,
+                name: this.user.name,
                 email: this.user.email,
                 password: this.user.password
             }

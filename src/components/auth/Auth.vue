@@ -6,7 +6,7 @@
 
             <div v-if="showSignup" class="input-box">
                 <i class="fas fa-user"></i>
-                <input v-model="user.user_name" type="text" required>
+                <input v-model="user.name" type="text" required>
                 <label>Name</label>
             </div>
 

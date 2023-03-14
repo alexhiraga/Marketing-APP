@@ -2,7 +2,7 @@
     <div>
         <b-img :src="project.image" rounded="circle" fluid-grow style="max-width: 300px; aspect-ratio: 1; object-fit: contain; border: 2px solid var(--active-btn)"></b-img>
         <h3 class="mt-4">{{ project.name }} </h3>
-        <b-badge class="mb-3" :variant="getStatusColor( project.status)">{{ getStatusName(project.status) }}</b-badge>
+        <b-badge class="mb-3" :variant="getStatusColor(project.status)">{{ getStatusName(project.status) }}</b-badge>
         <br>
         <div class="d-inline m-1" v-for="tag in this.project.tags" :key="tag">
             <b-badge pill variant="primary" v-b-tooltip.hover :title="tag">{{ tag }}</b-badge>
@@ -51,7 +51,7 @@ export default {
             window.open(url, "_blank")
         },
         openConfig() {
-            this.$router.push(`/project/${this.project.id}/settings`)
+            this.$router.push(`/project/${this.project.project_id}/settings`)
         }
     }
 }

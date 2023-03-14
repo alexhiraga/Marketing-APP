@@ -1,49 +1,56 @@
 <template>
-    <div>
-        <h1>project list</h1>
-        
-        <b-table hover striped borderless
-            id="projectList"
-            ref="projectList"
-            :items="projects"
-            :fields="fields"
-            sort-icon-left
-            @row-clicked="onRowClicked"
-        >
-            <template #cell(status)="data">
-                <b-badge :variant="getRoleColor(data.item.status)">
-                    {{ getStatusName(data.item.status) }}
-                </b-badge>
-            </template>
+    <div class="ProjectList">
+            <h1>Projects</h1>
+            
+            <b-table hover striped borderless
+                id="projectList"
+                ref="projectList"
+                :items="projects"
+                :fields="fields"
+                sort-icon-left
+                @row-clicked="onRowClicked"
+            >
 
-            <template #cell(members)="data">
-                <div>
+                <template #table-busy>
+                    <div class="text-center text-light my-2">
+                    <b-spinner class="align-middle"></b-spinner>
+                    <strong>Loading...</strong>
+                    </div>
+                </template>
 
-                    <b-avatar-group size="30px">
-                        <b-avatar 
-                            v-for="item in data.item.members" 
-                            :key="item" 
-                            :src="item.user_photo"
-                            v-b-tooltip.hover
-                            :title="item.user_name"
-                        ></b-avatar>
-                    </b-avatar-group>
-                </div>
-            </template>
-        </b-table>
+                <template #cell(status)="data">
+                    <b-badge :variant="getRoleColor(data.item.status)">
+                        {{ getStatusName(data.item.status) }}
+                    </b-badge>
+                </template>
 
+                <template #cell(users)="data">
+                    <div>
+
+                        <b-avatar-group size="30px">
+                            <b-avatar 
+                                v-for="item in data.item.users" 
+                                :key="item" 
+                                :src="item.image"
+                                v-b-tooltip.hover
+                                :title="item.name"
+                            ></b-avatar>
+                        </b-avatar-group>
+                    </div>
+                </template>
+            </b-table>
     </div>
 </template>
 
 <script>
-import projects from '@/data/projects'
+// import projects from '@/data/projects'
 import users from '@/data/users'
 
 export default {
     name: 'ProjectList',
     data() {
         return {
-            projects,
+            projects: [],
             users,
             fields: [
                 {
@@ -61,43 +68,47 @@ export default {
                     thStyle: 'width: 10%',
                 },
                 {
-                    key: 'members',
+                    key: 'users',
                     label: 'Members',
                     sortable: false,
                     tdStyle: 'align-items: center'
                 },
             ],
-            members: []
+            members: [],
         }
     },
 
     mounted() {
-        // this.getProjects()
-        this.getUsers()
+        this.getProjects()
+        // this.getUsers()
         this.$refs.projectList.refresh()
     },
 
     methods: {
-        // async getProjects() {
-        //     this.projects = await axios.get(...)
-        // },
+        async getProjects() {
+            try {
+                this.projects = (await this.$http.get('/projects')).data
+            } catch(e) {
+                console.error(e)
+            }
+        },
 
         onRowClicked(item) {
-            this.$router.push(`/project/${item.id}`)
+            this.$router.push(`/project/${item.project_id}`)
         },
-        getUsers() {
-            this.projects.map(e => {
-                for(let id in e.members) {
-                    for(let item in this.users) {
-                        if(e.members[id] == this.users[item].user_id) {
-                            // this.$set(e.members, 'id', this.users[item])
-                            e.members[id] = this.users[item]
-                            continue
-                        }
-                    }
-                }
-            })
-        },
+        // getUsers() {
+        //     this.projects.map(e => {
+        //         for(let id in e.members) {
+        //             for(let item in this.users) {
+        //                 if(e.members[id] == this.users[item].user_id) {
+        //                     // this.$set(e.members, 'id', this.users[item])
+        //                     e.members[id] = this.users[item]
+        //                     continue
+        //                 }
+        //             }
+        //         }
+        //     })
+        // },
     },
 }
 </script>

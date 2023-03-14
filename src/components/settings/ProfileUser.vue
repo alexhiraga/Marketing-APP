@@ -3,14 +3,14 @@
         <b-img 
             rounded="circle"
             fluid-grow
-            :src="user.user_photo"
+            :src="user.image"
             blank-color="#777"
             v-b-tooltip.hover
             title="Change photo"
             @click="$refs['uploadUserPhoto'].show()"
             style="cursor: pointer; max-width: 300px; aspect-ratio: 1"
         ></b-img>
-        <h3 class="mt-4">{{ user.user_name }} </h3>
+        <h3 class="mt-4">{{ user.name }} </h3>
         <b-badge class="mb-3" :variant="getRoleColor(user.permission)">{{ getRoleName(user.permission) }}</b-badge>
 
         <b-modal ref="uploadUserPhoto"

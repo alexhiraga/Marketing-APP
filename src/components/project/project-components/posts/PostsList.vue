@@ -67,9 +67,9 @@ export default {
         }
     },
 
-    mounted() {
+    async mounted() {
         //from utils, get the project info from id and users and populate project/members
-        this.getProjectData(this.id)
+        await this.getProjectData(this.id)
 
         //from utils, add the project to sidebar
         this.toggleProjectToSideBar('add', 'Projects')

@@ -41,7 +41,6 @@
                                         class="mr-2"
                                         id="socialIcons"
                                         :icon="link.icon" 
-                                        @click="openIconsModal(index, link.icon)"
                                         font-scale="1.5" 
                                         style="cursor:pointer"
                                         variant="light"
@@ -51,21 +50,63 @@
                                     <b-form-input
                                         v-model="link.url"
                                         placeholder="Enter URL"
-                                        required
+                                        disabled                                        
                                     ></b-form-input>
-                                    <b-icon
-                                        @click="removeItem(index, 'icon')"
+                                    <b-button
+                                        @click="openIconModal(link)"
                                         class="ml-2"
-                                        icon="x-square"
+                                        size="sm"
+                                        variant="warning"
+                                        title="Edit"
+                                        style="cursor: pointer"
+                                    >
+                                        <i class="fas fa-edit"></i>
+                                    </b-button>
+                                    <b-button
+                                        size="sm"
+                                        @click="removeItem(index, 'icon', link.social_id)"
+                                        class="ml-2"
                                         variant="danger"
                                         title="Remove"
                                         style="cursor: pointer;"
-                                    ></b-icon>
+                                    >   
+                                        <i class="fas fa-trash"></i>
+                                    </b-button>
                                 </div>
-                                <b-button @click="newSocial()" variant="outline-primary" size="sm" class="float-left">Add new</b-button>
+                                <b-button @click="openIconModal()" variant="outline-primary" size="sm" class="float-left">Add new</b-button>
                             </b-form-group>
 
                         </b-form>
+
+                        <b-modal
+                            ref="newIcon"
+                            title="Edit social info"
+                            ok-title="Save"
+                            button-size="sm"
+                        >
+                            <div class="d-flex mb-3" style="align-items: center">
+                                <b-icon 
+                                    class="mr-2"
+                                    id="socialIcons"
+                                    :icon="icon" 
+                                    @click="openIconsModal(index, icon)"
+                                    font-scale="1.5" 
+                                    style="cursor:pointer"
+                                    variant="light"
+                                    v-b-tooltip.hover
+                                    :title="url"
+                                    ></b-icon>
+                                    <b-form-input
+                                    v-model="url"
+                                    placeholder="Enter URL"
+                                    required
+                                ></b-form-input>
+                            </div>
+                            <template #modal-footer>
+                                <button @click="$refs['newIcon'].hide()" class="btn btn-secondary btn-sm m-1">Cancel</button>
+                                <button @click="addSocial()" class="btn btn-success btn-sm m-1">Save</button>
+                            </template>
+                        </b-modal>
                         <b-modal
                             hide-footer
                             ref="iconsModal"
@@ -84,15 +125,18 @@
                                 ></b-icon>
                             </div>
                         </b-modal>
+
+                        <b-button @click="save()" class="float-right" variant="success">Save</b-button>
+
                     </b-tab>
 
                     <b-tab title="Users">
                         <div>
                             <b-form-group label="Project members:" class="mt-3 text-left">
-                                <div class="d-flex mb-3" style="align-items: center" v-for="(member, index) in members" :key="index">
-                                    <b-avatar :src="member.user_photo" class="mr-2"></b-avatar>
+                                <div class="d-flex mb-3" style="align-items: center" v-for="(member, index) in project.users" :key="index">
+                                    <b-avatar :src="member.image" class="mr-2"></b-avatar>
                                     <b-badge class="mr-1" :variant="getRoleColor(member.permission)">{{ getRoleName(member.permission) }}</b-badge>
-                                    <span>{{ member.user_name }}</span>
+                                    <span>{{ member.name }}</span>
                                     <b-icon
                                         @click="removeItem(index, 'member', member.user_id)"
                                         class="ml-2"
@@ -127,10 +171,10 @@
                                 :filter="userFilter"
                                 @row-clicked="addUserToProject"
                             >
-                                <template #cell(user_name)="data">
-                                    <b-avatar :src="data.item.user_photo" class="mr-2"></b-avatar>
+                                <template #cell(name)="data">
+                                    <b-avatar :src="data.item.image" class="mr-2"></b-avatar>
                                     <b-badge class="mr-1" :variant="getRoleColor(data.item.permission)">{{ getRoleName(data.item.permission) }}</b-badge>
-                                    <span>{{ data.item.user_name }}</span>
+                                    <span>{{ data.item.name }}</span>
                                 </template>
                             </b-table>
                         </div>
@@ -140,11 +184,7 @@
                         <under-construction />
                     </b-tab>
                 </b-tabs>
-
-                <b-button @click="save()" class="float-right" variant="success">Save</b-button>
-
             </div>
-
             <div class="col-lg-3 col-sm-0"></div>
         </div>
     </div>
@@ -169,20 +209,24 @@ export default {
             selectedIcon: '',
             fields: [
                 {
-                    key: 'user_name',
+                    key: 'name',
                     label: 'Name',
                     sortable: true,
                 },
             ],
             showUsers: false,
             userFilter: '',
+            usersList: [],
+            icon: '',
+            url: '',
+            social_id: '',
         }
     },
 
-    mounted() {
+    async mounted() {
         //from utils, get the project info from id and users and populate project/members
-        this.getProjectData(this.id)
-
+        await this.getProjectData(this.id)
+        this.getUsers()
         this.transformToMultiSelect()
         
         //from utils, add the project to sidebar
@@ -205,15 +249,25 @@ export default {
     },
 
     methods: {
+        async getUsers() {
+            try {
+                this.usersList = (await this.$http.get('/users')).data
+            } catch(e) {
+                console.error(e)
+            }
+        },
+
         transformToMultiSelect() {
-            for(let i in this.project.tags) {
+            if(!this.project.tags) return
+            var tags = this.project.tags.split(",")
+            for(let i in tags) {
                 this.tagsOptions.push({
-                    name: this.project.tags[i],
-                    code: this.project.tags[i]
+                    name: tags[i],
+                    code: tags[i]
                 })
                 this.tagsValue.push({
-                    name: this.project.tags[i],
-                    code: this.project.tags[i]
+                    name: tags[i],
+                    code: tags[i]
                 })
             }
         },
@@ -235,7 +289,8 @@ export default {
         },
 
         chooseIcon(icon) {
-            this.project.social[this.iconIndex].icon = icon
+            // this.project.social[this.iconIndex].icon = icon
+            this.icon = icon
             this.$refs.iconsModal.hide()
         },
 
@@ -246,47 +301,132 @@ export default {
             })
         },
 
-        removeItem(index, type, id) {
-            if(type == 'icon') this.project.social.splice(index, 1)
+        openIconModal(item) {
+            this.icon = item ? item.icon : 'plus-square'
+            this.url = item ? item.url : ''
+            this.social_id = item ? item.social_id : ''
+
+            this.$refs['newIcon'].show()
+        },
+
+        async addSocial(){
+            let method = this.social_id ? 'put' : 'post'
+            let id = this.social_id ? `/${this.social_id}` : ''
+            const data = {
+                icon: this.icon,
+                url: this.url,
+                project_id: this.id
+            }
+            try {
+                let res = (await this.$http[method](`/social${id}`, data)).data
+                if(this.social_id) {
+                    for(let i in this.project.social) {
+                        if(this.project.social[i].social_id ==  this.social_id) {
+                            this.project.social[i].url = this.url
+                            this.project.social[i].icon = this.icon
+                        }
+                    }
+                } else {
+                    this.project.social.push({
+                        url: this.url,
+                        icon: this.icon,
+                        social_id: res[0]
+                    })
+                }
+            } catch(e) {
+                console.error(e)
+            }
+
+            this.$refs['newIcon'].hide()
+        },
+
+        async removeItem(index, type, id) {
+            if(type == 'icon') {
+                this.$swal.fire({
+                    title: 'Are you sure?',
+                    // text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, remove it!'
+                    }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            await this.$http.delete(`/social/${id}`)
+                        } catch(e) {
+                            console.error(e)
+                        }
+                        this.project.social.splice(index, 1)
+                    }
+                })
+            }
             if(type == 'member' ) {
-                //Remove member id from project object
-                let index = this.project.members.indexOf(id)
-                this.project.members.splice(index, 1)
-
-                //Remove member from rendered list
-                this.members.splice(index, 1)
-
+                try {
+                    await this.$http.delete(`/members/${this.id}/${id}`)
+                    this.project.users.splice(index, 1)
+                } catch(e) {
+                    console.error(e)
+                }
                 //Refresh table
                 this.notProjectMembers()
             }
         },
 
         notProjectMembers() {
-            //Compares all users from project members id to create a list of non-members
-            let notProjectMember = this.users.filter(e => {
-                for(let id in this.project.members) {
-                    if(e.user_id === this.project.members[id]) {
-                        return
-                    }
+            let selectedItemFilter = this.project.users.map(item => { return item.user_id })
+
+            let filteredUsers = this.usersList.filter(item => !selectedItemFilter.includes(item.user_id))
+            return filteredUsers
+        },
+
+        async addUserToProject(user) {
+            try {
+                const newUser = {
+                    project_id: this.id,
+                    user_id: user.user_id
                 }
-                return e
-            })
-            return notProjectMember
-        },
+                await this.$http.post('/members', newUser)
 
-        addUserToProject(item) {
-            this.members.push(item) //Add member to member list
-            this.project.members.push(item.user_id) //Add member id to project members
-            this.notProjectMembers() //Refresh table
-        },
+                this.project.users.push(user)
+                this.notProjectMembers() //Refresh table
 
-        save() {
-            //no back-end
-            this.$swal({
-                title: 'Error',
-                icon: 'error',
-                text: 'Feature not available.'
-            })
+            } catch(e) {
+                console.error(e)
+            }
+        },
+        async save() {
+            let tags = ''
+            if(this.tagsValue) {
+                for(let i in this.tagsValue) {
+                    tags += this.tagsValue[i].name + ","
+                }
+                tags = tags.slice(0, -1)
+            }
+            const newData = {
+                name: this.project.name,
+                status: this.project.status,
+                tags,
+                image: this.project.image,
+                project_id: this.project.project_id
+            }
+
+            try {
+                await this.$http.put(`/projects/${this.id}`, newData)
+                this.$swal.fire(
+                    'Saved!',
+                    'The project has been saved.',
+                    'success'
+                )
+            } catch(e) {
+                console.error(e)
+                this.$swal({
+                    title: 'Error',
+                    icon: 'error',
+                    text: 'Could not save the project info.'
+                })
+            }
+
         }
         
     }

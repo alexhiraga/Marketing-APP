@@ -35,12 +35,12 @@
             <div class="mx-3 d-flex">
                 <b-avatar-group size="20px" class="mt-1">
                     <b-avatar v-for="(member, i) in members.slice(0,3)" :key="i"
-                        :src="member.user_photo"
+                        :src="member.image"
                         v-b-tooltip.hover
-                        :title="member.user_name"
+                        :title="member.name"
                     ></b-avatar>
                 </b-avatar-group>
-                <p class="ml-2">Liked by <strong>{{ members[0].user_name }}</strong> and <strong>{{ members.length-1 }} others</strong></p>
+                <p class="ml-2">Liked by <strong>{{ members[0].name }}</strong> and <strong>{{ members.length-1 }} others</strong></p>
             </div>
 
             <div class="mx-3">

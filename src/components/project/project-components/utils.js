@@ -24,17 +24,17 @@ export default {
                 this.$store.state.menu.map(e => {
                     if(e.title == title){
                         e.child.push({
-                            href: '/project/' + this.id,
+                            href: '/project/' + this.project.project_id,
                             title: this.project.name,
                             icon: 'far fa-folder-open',
                             child: [
                                 {
-                                    href: '/project/' + this.id + '/posts/' + postid + isView,
+                                    href: '/project/' + this.project.project_id + '/posts/' + postid + isView,
                                     title: 'Posts',
                                     icon: 'fab fa-instagram',
                                 },
                                 {
-                                    href: '/project/' + this.id + '/settings',
+                                    href: '/project/' + this.project.project_id + '/settings',
                                     title: 'Settings',
                                     icon: 'fas fa-cog'
                                 }
@@ -49,21 +49,22 @@ export default {
                     }
                 })
             }
+            /* eslint-disable */
 
         },
 
-        getProjectData(id) {
-            //req to back-end 
-            let projectInfo
+        async getProjectData(id) {
             try {
-                projectInfo = this.projectInfo
-
+                this.project = (await this.$http.get(`/projects/${id}`)).data
             } catch(e) {
                 console.error(e)
             }
-            this.project = projectInfo.find(e => e.id == id)
+            // this.getUsers(this.project.members)
+        },
 
-            this.getUsers(this.project.members)
+        stringToArray() {
+            if(!this.project.tags) return
+            this.project.tags = this.project.tags.split(",")
         },
 
         getUsers(members) {
