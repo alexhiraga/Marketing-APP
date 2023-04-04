@@ -1,6 +1,6 @@
 <template>
     <div class="PostId">
-        <PostsFeed :id="id" :postid="postid" :view_only="false" />
+        <PostsFeed :id="id" :month="month" :year="year" :view_only="false" />
     </div>
 </template>
 
@@ -8,25 +8,22 @@
 import utils from '../../utils'
 import PostsFeed from './PostsFeed.vue'
 
-import postDetails from '@/data/postsDetails'
-
 export default {
     name: 'PostId',
-    props: ['id', 'postid'],
+    props: ['id', 'month', 'year'],
     mixins: [utils],
     components: { PostsFeed },
     data() {
         return {
-            postDetails
         }
     },
 
-    mounted() {
+    async mounted() {
         //from utils, get the project info from id and users and populate project/members
-        this.getProjectData(this.id)
+        // await this.getProjectData(this.id)
 
         //from utils, add the project to sidebar
-        this.toggleProjectToSideBar('add', 'Projects', this.postid)
+        // await this.toggleProjectToSideBar('add', 'Projects', this.id)
 
         //get details of the post based on the this.postid
         //this.getPostDetails(this.postid)
@@ -39,9 +36,7 @@ export default {
     },
 
     methods: {
-        getPostDetails() {
-            //this.postDetails = await axios.get(..) based in this.postid
-        }
+        
     }
 }
 </script>

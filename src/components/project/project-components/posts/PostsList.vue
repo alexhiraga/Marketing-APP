@@ -3,16 +3,25 @@
         <h2>Posts</h2>
 
         <div class="row pt-4">
-            <div class="col-lg-8 col-sm-12">
-
+            <div class="col-lg-7 col-sm-12">
+                <div class="d-flex justify-content-between mb-4">
+                    <b-button @click="$router.push(`/project/${id}/posts/new`)" variant="primary">New post</b-button>
+                </div>
                 <b-table hover striped borderless
-                    id="projectList"
-                    ref="projectList"
-                    :items="getPostsLists"
+                    id="postsList"
+                    ref="postsList"
+                    :items="posts"
                     :fields="fields"
                     sort-icon-left
                     @row-clicked="onRowClicked"
                 >
+                    <template #empty>
+                        <h6>No post found</h6>
+                    </template>
+
+                    <template #cell(month)="data">
+                        {{ getMonthName(data.item.month) }}/{{ data.item.year }}
+                    </template>
 
                     <template #cell(status)="data">
                         <b-badge :variant="getRoleColor(data.item.status)">
@@ -23,10 +32,12 @@
                 </b-table>
             </div>
 
-            <div class="col-lg-4 col-sm-12">
+            <div class="col-lg-5 col-sm-12">
                 <PostsFeed 
                     :id="id"
                     :view_only="true"
+                    :month="lastMonth"
+                    :year="lastYear"
                 />
             </div>
         </div>
@@ -60,10 +71,10 @@ export default {
                     label: 'Status',
                 },
                 {
-                    key: 'posts_quantity',
+                    key: 'count',
                     label: 'Posts'
                 }
-            ]
+            ],
         }
     },
 
@@ -74,7 +85,9 @@ export default {
         //from utils, add the project to sidebar
         this.toggleProjectToSideBar('add', 'Projects')
         
-        this.getPostsLists()
+        await this.getPostsLists(this.id)
+        this.getLastMonth()
+        this.$refs.postsList.refresh()
     },
 
     beforeDestroy() {
@@ -83,18 +96,17 @@ export default {
     },
 
     methods: {
-        
-
         onRowClicked(item) {
-            this.$router.push(`/project/${this.id}/posts/${item.post_id}`)
+            this.$router.push(`/project/${this.id}/posts/${item.month}/${item.year}`)
         },
+        
     }
 
 }
 </script>
 
 <style>
-    #projectList tr {
+    #postsList tr {
         cursor: pointer;
     }
 </style>

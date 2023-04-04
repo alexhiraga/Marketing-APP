@@ -13,12 +13,14 @@ import VueApexCharts from 'vue-apexcharts'
 import moment from 'moment'
 import roles from './store/roles'
 import status from './store/status'
+import toMonthName from './store/toMonthName'
 import UnderConstruction from './components/UnderConstruction.vue'
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/src/sweetalert2.js'
 import { baseApiUrl } from './global.js'
 import './plugins/axios'
 import './config/msgs'
+import mDatePicker from 'vue-multi-date-picker'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
@@ -31,9 +33,11 @@ Vue.use(moment);
 window.Apex.chart = { fontFamily: "Rubik" }
 Vue.mixin(roles)
 Vue.mixin(status)
+Vue.mixin(toMonthName)
 Vue.component('under-construction', UnderConstruction)
 Vue.use(VueSweetalert2)
 Vue.use(baseApiUrl)
+Vue.use(mDatePicker)
 
 new Vue({
   router,

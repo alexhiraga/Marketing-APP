@@ -2,9 +2,9 @@
     <div>
         <b-img :src="project.image" rounded="circle" fluid-grow style="max-width: 300px; aspect-ratio: 1; object-fit: contain; border: 2px solid var(--active-btn)"></b-img>
         <h3 class="mt-4">{{ project.name }} </h3>
-        <b-badge class="mb-3" :variant="getStatusColor(project.status)">{{ getStatusName(project.status) }}</b-badge>
+        <b-badge v-if="project.status" class="mb-3" :variant="getStatusColor(project.status)">{{ getStatusName(project.status) }}</b-badge>
         <br>
-        <div class="d-inline m-1" v-for="tag in this.project.tags" :key="tag">
+        <div class="d-inline m-1" v-for="(tag, i) in this.project.tags" :key="tag+i">
             <b-badge pill variant="primary" v-b-tooltip.hover :title="tag">{{ tag }}</b-badge>
         </div>
         <hr class="xs">
@@ -18,7 +18,7 @@
             Edit project
         </b-button>
         <br>
-        <div class="d-inline m-1" v-for="icon in project.social" :key="icon">
+        <div class="d-inline m-1" v-for="(icon, i) in project.social" :key="i">
             <b-icon 
                 id="socialIcons"
                 :icon="icon.icon" 

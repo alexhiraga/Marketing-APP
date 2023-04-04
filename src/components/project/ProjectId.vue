@@ -14,8 +14,8 @@
                     <SmallCardData 
                         title="Total Revenue"
                         subtitle="Ecommerce and ad"
-                        :goal="project.gaData.goalMonthlyRevenue"
-                        :ga_data="project.gaData.totalRevenue"
+                        :goal="gadata.goalMonthlyRevenue"
+                        :ga_data="gadata.totalRevenue"
                         icon="far fa-dollar-sign"
                     />
                 </div>
@@ -24,8 +24,8 @@
                     <SmallCardData 
                         title="Conversion"
                         subtitle="Ad performance"
-                        :goal="project.gaData.goalMonthlyConversion"
-                        :ga_data="project.gaData.conversion"
+                        :goal="gadata.goalMonthlyConversion"
+                        :ga_data="gadata.conversion"
                         icon="fas fa-chart-line"
                     />
                 </div>
@@ -33,14 +33,68 @@
                 <div class="col-lg-12 mt-3">
                     <GraphCardData 
                         title="Users"
-                        :goal="project.gaData.goalMonthlyUsers"
-                        :ga_data="project.gaData.users"
+                        :goal="gadata.goalMonthlyUsers"
+                        :ga_data="gadata.users"
                     />
                 </div>
             </div>
 
             <div class="col-lg-4 col-sm-12 mt-3">
-                insta
+                <div class="card p-4 m-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <b-icon icon="instagram" scale="2" variant="info"></b-icon>
+                            <h5 class="ml-3 mt-2">
+                                Next post
+                            </h5>
+                        </div>
+                        <b-button @click="openPosts()" variant="primary" size="sm">Open posts</b-button>
+                    </div>
+
+                    <div v-if="lastPost" class="d-flex justify-content-between mt-3">
+                        <div v-b-hover="postHover" style="min-width: 150px!important">
+                            <div v-if="isHover" 
+                                class="hoverPostInfo" 
+                                style="cursor: pointer"
+                                @click="openPostModal(lastPost)"
+                            >
+                                <p style="padding-top: 46%">
+                                    <i class="far fa-calendar mr-2"></i>
+                                    {{ getPublishDate(lastPost.publishDate) }}
+                                </p>
+                            </div>
+                            <b-img fluid-grow style="width: 150px; height: 150px; aspect-ratio: 1; object-fit: cover;"
+                                :src="lastPost.image_url">
+                            </b-img>
+                        </div>
+                        <div class="ml-3 mt-1">
+                            <p class="text-sm text-left">
+                                {{ lastPost.description ? lastPost.description.slice(0,200) : '' }}
+                                {{ lastPost.description ? lastPost.description.length > 200 ? '...' : '' : '' }}
+                            </p>
+                            <p class="text-sm text-secondary text-right">
+                                {{ getPublishDate(lastPost.publishDate) }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div v-else>
+                        <div class="text-secondary py-5">
+
+                            <b-icon icon="folder-x"></b-icon>
+                            No post found.
+                        </div>
+                    </div>
+
+                    <PostModal 
+                        ref="postmodal"
+                        :project="project"
+                    />
+
+                </div>
+                <!-- <b-button variant="outline-primary" @click="openPosts()">
+                    <i class="fas fa-instagram"></i>
+                </b-button>  -->
             </div>
 
         </section>
@@ -52,40 +106,17 @@ import SmallCardData from './project-components/SmallCardData.vue'
 import GraphCardData from './project-components/GraphCardData.vue'
 import ProjectDetails from './project-components/ProjectDetails.vue'
 import utils from './project-components/utils'
-
+import * as moment from "moment";
+import PostModal from '@/components/project/project-components/posts/post-view/PostModal.vue'
 
 export default {
     props: ['id'],
-    components: { SmallCardData, GraphCardData, ProjectDetails },
+    components: { SmallCardData, GraphCardData, ProjectDetails, PostModal },
     mixins: [utils],
     data() {
         return {
             isBusy: false,
-        }
-    },
-
-    async mounted() {
-        //from utils, get the project info from id and users and populate project/members
-        await this.getProjectData(this.id)
-        
-        //Transform tags in array
-        this.stringToArray()
-
-        //just a data mock 
-        this.mockGaData()
-
-        //from utils, add the project to sidebar
-        this.toggleProjectToSideBar('add', 'Projects')
-    },
-
-    beforeDestroy() {
-        //from utils, remove project from sidebar
-        this.toggleProjectToSideBar('remove', 'Projects')
-    },
-
-    methods: {
-        mockGaData() {
-            let gadata = {
+            gadata: {
                 "totalRevenue": [
                     { "date": "08-12-2022", "value": 309 },
                     { "date": "09-12-2022", "value": 87 },
@@ -185,12 +216,71 @@ export default {
                 "goalMonthlyRevenue": 4000,
                 "goalMonthlyConversion": 100,
                 "goalMonthlyUsers": 20000
-            }
-            this.$set(this.project, 'gaData', gadata)
+            },
+            lastPost: {},
+            isHover: false,
         }
+    },
+
+    created() {
+        //from utils, add the project to sidebar
+        this.toggleProjectToSideBar('add', 'Projects')
+    },
+
+    async mounted() {
+        //from utils, get the project info from id and users and populate project/members
+        await this.getProjectData(this.id)
+        
+        //Transform tags in array
+        this.stringToArray()
+
+        //Get posts list and last month/year
+        await this.getPostsLists(this.id)
+        this.getLastMonth()
+
+        this.getNextPost()
+    },
+
+    beforeDestroy() {
+        //from utils, remove project from sidebar
+        this.toggleProjectToSideBar('remove', 'Projects')
+    },
+
+    methods: {
+        openPosts() {
+            this.$router.push(`/project/${this.project.project_id}/posts`)
+        },
+
+        async getNextPost() {
+            try {
+                this.lastPost = (await this.$http.get(`/posts/${this.id}/next`)).data
+            } catch(e) {
+                console.error(e)
+            }
+        },
+
+        getPublishDate(value) {
+            return moment(value).format('MMMM D, YYYY')
+        },
+
+        postHover(hovered) {
+            this.isHover = hovered
+        },
+
+        openPostModal(post) {
+            this.$refs.postmodal.openModal(post)
+        },
     },
 }
 </script>
 
-<style>
+<style scoped>
+.hoverPostInfo {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    margin-top:0;
+    z-index: 3;
+    width:150px;
+    height:150px;
+}
 </style>

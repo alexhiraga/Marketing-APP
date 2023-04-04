@@ -18,6 +18,11 @@
                     </div>
                 </template>
 
+                <template #cell(name)="data">
+                    <b-img v-if="data.item.image" :src="data.item.image" rounded="circle" fluid-grow style="max-width: 30px; aspect-ratio: 1; object-fit: contain; border: 1px solid var(--active-btn)"></b-img>
+                    {{ data.item.name }}
+                </template>
+
                 <template #cell(status)="data">
                     <b-badge :variant="getRoleColor(data.item.status)">
                         {{ getStatusName(data.item.status) }}
@@ -29,8 +34,8 @@
 
                         <b-avatar-group size="30px">
                             <b-avatar 
-                                v-for="item in data.item.users" 
-                                :key="item" 
+                                v-for="(item, i) in data.item.users" 
+                                :key="i" 
                                 :src="item.image"
                                 v-b-tooltip.hover
                                 :title="item.name"
@@ -78,8 +83,8 @@ export default {
         }
     },
 
-    mounted() {
-        this.getProjects()
+    async mounted() {
+        await this.getProjects()
         // this.getUsers()
         this.$refs.projectList.refresh()
     },

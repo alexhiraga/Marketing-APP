@@ -3,6 +3,28 @@
         <div class="row">
             <div class="col-lg-4 col-sm-12 mt-3">
                 <ProjectDetails :project="project" :hide_edit_btn="true" />
+
+                <b-button @click="openModalChangeProjectPhoto()" variant="outline-secondary" class="mt-4">Change photo</b-button>
+
+                <b-modal
+                    ref="changeProjectPhoto"
+                    title="Change photo"
+                    button-size="sm"
+                    size="sm"
+                    hide-footer
+                >
+                    <div class="file-drop-area">
+                        <i class="fas fa-file-upload"></i>
+                        <p class="ml-2 mt-3 text-secondary text-sm">Click here or drop an image.</p>
+                        <input 
+                            class="file-input" 
+                            type="file" 
+                            @change="uploadImage($event)"
+                            accept="image/png, image/jpeg, image/jpg"
+                        >
+                    </div>
+                    <b-button class="float-right mt-3" size="sm" @click="$refs['changeProjectPhoto'].hide()" variant="secondary">Cancel</b-button>
+                </b-modal>
             </div>
 
             <div class="col-lg-5 col-sm-12 mt-3">
@@ -23,7 +45,7 @@
                                 <b-form-select :options="getAllStatusNames()" v-model="project.status"></b-form-select>
                             </b-form-group>
 
-                            <label class="typo__label">Tags:</label>
+                            <label>Tags:</label>
                             <multiselect 
                                 v-model="tagsValue" 
                                 tag-placeholder="Add this as new tag" 
@@ -427,6 +449,45 @@ export default {
                 })
             }
 
+        },
+
+        async uploadImage(event) {
+            if(!event) return
+            if(event.target.files[0].size > 3E6) {
+                this.$swal({
+                    title: 'Error',
+                    icon: 'error',
+                    text: `Maximum upload file size 3MB!`
+                })
+                return
+            }
+
+            let data = new FormData()
+            data.append('image', event.target.files[0])
+
+            let config = {
+                header: {
+                    'Content-Type': 'image'
+                }
+            }
+
+            try {
+                let res = (await this.$http.post('/image', data, config)).data
+                this.project.image = res.image_url
+                this.$refs['changeProjectPhoto'].hide()
+            } catch(e) {
+                console.error(e)
+                this.$swal({
+                    title: 'Error',
+                    icon: 'error',
+                    text: `An unexpected error occurred`
+                })
+                return
+            }
+        },
+
+        openModalChangeProjectPhoto() {
+            this.$refs['changeProjectPhoto'].show()
         }
         
     }
@@ -443,4 +504,40 @@ export default {
     #nonMemberList {
         cursor:pointer;
     }
+</style>
+
+<style lang="scss" scoped>
+.file-drop-area {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 450px;
+    max-width: 100%;
+    padding: 25px;
+    border: 1px dashed rgba(255, 255, 255, 0.4);
+    border-radius: 3px;
+    transition: 0.2s;
+    &.is-active {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+  }
+  
+.file-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    opacity: 0;
+    &:focus {
+      outline: none;
+    }
+  }
+
+.previewImage {
+    object-fit: contain;
+    max-height: 100px;
+    max-width: 100px;
+}
 </style>

@@ -147,6 +147,31 @@ hr.lg {
     background-color: var(--active-btn)!important;
 }
 
+//vue-multi-date-picker
+.pick-panel {
+    background: #1a1a1a!important;
+    color: white!important;
+    box-shadow: none!important;
+    border:1px solid #3a3a3a !important;
+    width: 100%!important;
+    border-radius: 0.25rem!important;
+    padding: 0.5rem;
+}
+.pick-panel .dp-header {
+    color: var(--active-btn)!important;
+}
+
+.selected-date {
+    width: 100%!important;
+    min-width: 100%!important;
+    max-width: 400px!important;
+    background: #1a1a1a!important;
+    box-shadow: none!important;
+    border:1px solid #3a3a3a !important;
+    border-radius: 0.25rem!important;
+    min-height: 38px!important;
+
+}
 // Then import Bootstrap and BootstrapVue SCSS files (order is important)
 @import 'node_modules/bootstrap/scss/bootstrap.scss';
 @import 'node_modules/bootstrap-vue/src/index.scss';

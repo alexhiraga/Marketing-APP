@@ -2,22 +2,23 @@ import projectInfo from '@/data/projectInfo'
 import users from '@/data/users'
 import icons from '@/data/socialIcons'
 
-import posts from '@/data/postsList'
-
 export default {
     data() {
         return {
             projectInfo,
             icons,
             users,
-            posts,
+            posts: [],
+            postsDetails: [],
             project: {},
             members: [],
+            lastYear: '',
+            lastMonth: ''
         }
     },
-
+/* eslint-disable */
     methods: {
-        toggleProjectToSideBar(toggle, title, postid, isView){
+        async toggleProjectToSideBar(toggle, title, postid, isView){
             if(!postid) postid = ''
             if(!isView) isView = ''
             if(toggle == 'add'){
@@ -75,11 +76,33 @@ export default {
             })
         },
 
-        getPostsLists() {
-            //req to back-end
-            //this.posts = await axios.get(...)
+        async getPostsLists(id) {
+            try {
+                this.posts = (await this.$http.get(`/posts/${id}`)).data
+            } catch(e) {
+                console.error(e)
+            }
             return this.posts
         },
+
+        async getPostsDetails(month, year, projectid) {
+            if(!month || !year || !projectid) return
+            try {
+                this.postsDetails = await this.$http.get(`/posts/${projectid}/${month}/${year}`)
+                this.$set(this.postsDetails, 'project_id', projectid)
+                this.$set(this.postsDetails, 'month', month)
+                this.$set(this.postsDetails, 'year', year)
+            } catch(e) {
+                console.error(e)
+            }
+        },
+
+        getLastMonth() {
+            if(this.posts.length) {
+                this.lastMonth = this.posts[0].month
+                this.lastYear = this.posts[0].year
+            }
+        }
 
     }
 }

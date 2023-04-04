@@ -19,6 +19,7 @@
                     <b-form-input
                         v-model="user.password"
                         v-if="changePassword"
+                        type="password"
                         placeholder="New password"
                         class="mr-2"
                     ></b-form-input>
@@ -56,11 +57,11 @@ export default {
 
     methods: {
         async save() {
-            //no back-end
             let user = {
                 name: this.user.name,
                 email: this.user.email,
-                password: this.user.password
+                password: this.user.password,
+                image: this.user.image
             }
             if(!user.password) delete user.password
 
@@ -70,6 +71,8 @@ export default {
                 //refresh in store
                 //PS: NOT WORKING, when you refresh the page, the user in store doesnt show right
                 this.$store.commit('refreshUser', user)
+
+                this.changePassword = false
             } catch(e) {
                 this.$swal({
                     title: 'Error',
@@ -78,11 +81,6 @@ export default {
                 })
             }
 
-            // this.$swal({
-            //     title: 'Error',
-            //     icon: 'error',
-            //     text: 'Feature not available.'
-            // })
         },
 
         toggleChangePassword() {

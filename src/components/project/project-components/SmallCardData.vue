@@ -14,7 +14,7 @@
                     <h6 class="text-secondary">{{ subtitle }}</h6>
                 </div>
 
-                <div class="col-12" v-b-tooltip.hover :title="goalPercentage().toFixed(0) + '%'">
+                <div v-if="goal" class="col-12" v-b-tooltip.hover :title="goalPercentage().toFixed(0) + '%'">
                     <span class="text-secondary text-sm">Goal: {{ title == 'Total Revenue' ? '$' : '' }}{{ goal }}</span>
                     <b-progress 
                         class="mx-3" 
@@ -25,7 +25,7 @@
                 </div>
             </div>
                 
-            <div class="col-4 ml-3" style="border-left: solid 2px gray">
+            <div v-if="goal" class="col-4 ml-3" style="border-left: solid 2px gray">
                 <i :class="isGoalReached() ? 'fas fa-chevron-up text-success' : 'fas fa-chevron-down text-' +  progressBarColor('variant')" class="text-xl"></i>
                 <h5 :class="isGoalReached() ? 'text-success' : 'text-' + progressBarColor('variant') " class="text-bold">{{ title == 'Total Revenue' ? '$' : '' }}{{ totalDataValue() }}</h5>
                 <p class="text-secondary">last 30 days</p>

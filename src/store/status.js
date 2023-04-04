@@ -18,15 +18,17 @@ export default {
 
     methods: {
         getStatusName(statusValue) {
+            if(!statusValue) return
             return this.status[statusValue].name
         },
         getStatusColor(statusValue) {
+            if(!statusValue) return
             return this.status[statusValue].variant
         },
         getAllStatusNames() {
             var status = Object.keys(this.status).map(key => {
                 var options = {}
-                this.$set(options, 'value', key)
+                this.$set(options, 'value', parseInt(key))
                 this.$set(options, 'text', this.status[key].name)
                 return options
             })

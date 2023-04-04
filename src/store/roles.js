@@ -17,9 +17,11 @@ export default {
 
     methods: {
         getRoleName(roleValue) {
+            if(!roleValue) return
             return this.role[roleValue].name
         },
         getRoleColor(roleValue) {
+            if(!roleValue) return
             return this.role[roleValue].variant
         },
         getAllRolesNames() {

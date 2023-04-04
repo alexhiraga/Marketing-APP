@@ -43,16 +43,28 @@ const routes = [
         component: () => import('../components/project/project-components/posts/PostsList.vue'),
     },
     {
-        path: '/project/:id/posts/:postid',
+        path: '/project/:id/posts/:month/:year',
         name: 'PostId',
         props: true,
         component: () => import('../components/project/project-components/posts/post-view/PostId.vue')
     },
     {
-        path: '/project/:id/posts/:postid/view',
+        path: '/project/:id/posts/:month/:year/view',
         name: 'PostsFeed',
         props: true,
         component: () => import('../components/project/project-components/posts/post-view/PostsFeed.vue')
+    },
+    {
+        path: '/project/:id/posts/:month/:year/edit',
+        name: 'EditPost',
+        props: true,
+        component: () => import('../components/project/project-components/posts/EditPost.vue')
+    },
+    {
+        path: '/project/:id/posts/new',
+        name: 'NewPost',
+        props: true,
+        component: () => import('../components/project/project-components/posts/EditPost.vue')
     },
     {
         path: '/auth',

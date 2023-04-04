@@ -51,6 +51,7 @@ export default new Vuex.Store({
             if(!user) return
             state.user.name = user.name
             state.user.email = user.email
+            state.user.image = user.image
             if(!user.permission) return
             state.user.permission = user.permission
         }

@@ -2,14 +2,14 @@
     <div class="PostModal">
         <b-modal
             id="postmodal"
-            ref="postmodal"
+            ref="postInfoModal"
             hide-footer
             hide-header
             centered
         >
             <div class="postModalHeader d-flex justify-content-between mx-3">
                 <div class="d-flex align-items-center">
-                    <b-img :src="project.image" width="30px" height="30px"></b-img>
+                    <b-img :src="project.image" :blank="!project.image" blankColor="#1a1a1a" width="30px" height="30px" style="object-fit: contain"></b-img>
                     <h6 class="mb-0 ml-3">{{ project.name }}</h6>
                 </div>
                 <div>
@@ -18,7 +18,7 @@
             </div>
 
             <div class="postModalImage my-3">
-                <b-img :src="image" class="w-100"></b-img>
+                <b-img :src="image" blankColor="#1a1a1a" :blank="!image" class="w-100"></b-img>
             </div>
 
             <div class="interactionIcons d-flex m-3 justify-content-between">
@@ -32,15 +32,23 @@
                 </div>
             </div>
 
-            <div class="mx-3 d-flex">
-                <b-avatar-group size="20px" class="mt-1">
-                    <b-avatar v-for="(member, i) in members.slice(0,3)" :key="i"
+            <div class="mx-3 d-flex" v-if="project.users">
+                <b-avatar-group size="20px" class="mt-1" v-if="project.users.length > 1">
+                    <b-avatar v-for="(member, i) in project.users.slice(0,3)" :key="i"
                         :src="member.image"
                         v-b-tooltip.hover
                         :title="member.name"
                     ></b-avatar>
                 </b-avatar-group>
-                <p class="ml-2">Liked by <strong>{{ members[0].name }}</strong> and <strong>{{ members.length-1 }} others</strong></p>
+                <b-avatar v-if="project.users.length == 1"
+                    size="20px" class="mt-1" 
+                    :src="project.users ? project.users[0].image : ''" 
+                    v-b-tooltip.hover 
+                    :title="project.users[0].name"
+                ></b-avatar>
+                <p class="ml-2" v-if="project.users.length > 2">Liked by <strong>{{ project.users[0].name }}</strong> and <strong>{{ project.users.length-1 }} others</strong></p>
+                <p class="ml-2" v-if="project.users.length == 2">Liked by <strong>{{ project.users[0].name }}</strong> and <strong>{{ project.users[1].name }}</strong></p>
+                <p class="ml-2" v-if="project.users.length == 1">Liked by <strong>{{ project.users[0].name }}</strong></p>
             </div>
 
             <div class="mx-3">
@@ -57,7 +65,7 @@ import * as moment from "moment";
 
 export default {
     name: 'PostModal',
-    props: [ 'members', 'project' ],
+    props: [ 'project' ],
     data() {
         return {
             image: '',
@@ -67,20 +75,22 @@ export default {
     },
 
     mounted() {
-        this.shuffleMembersArray(this.members)
+        this.shuffleMembersArray(this.project.users)
     },
-    
+    /* eslint-disable */
     methods: {
         openModal(post) {
             this.image = post.image_url
             this.description = post.description
-            this.date = moment(post.publishDate, 'DD/MM/YYYY').format('MMMM D, YYYY')
-            this.shuffleMembersArray(this.members)
+            this.date = moment(post.publishDate).format('MMMM D, YYYY')
+            this.shuffleMembersArray(this.project.users)
 
-            this.$refs.postmodal.show()
+            this.$refs['postInfoModal'].show()
         },
 
         shuffleMembersArray(array) {
+            if(!array) return
+            if(array.length < 3) return
             let currentIndex = array.length,  randomIndex;
 
             // While there remain elements to shuffle.
@@ -95,7 +105,7 @@ export default {
                 array[randomIndex], array[currentIndex]];
             }
 
-            this.$set(this, 'members', array)
+            this.$set(this.project, 'users', array)
         }
     }
 }
